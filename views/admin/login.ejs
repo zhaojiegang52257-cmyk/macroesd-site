@@ -1,0 +1,9 @@
+<div class="login-card">
+  <div class="adm-brand center">Macro<b>ESD</b> CMS</div>
+  <% if (error) { %><p class="adm-err"><%= error %></p><% } %>
+  <form method="post" action="/admin/login">
+    <label>Username<input name="username" required autofocus></label>
+    <label>Password<input name="password" type="password" required></label>
+    <button class="btn-adm wide">Sign in</button>
+  </form>
+</div>

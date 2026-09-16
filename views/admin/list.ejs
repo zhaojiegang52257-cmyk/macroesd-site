@@ -1,0 +1,25 @@
+<h1><%= title %></h1>
+<p class="adm-sub">
+  <a class="btn-adm" href="/admin/<%= c %>/new">+ New <%= spec.label.toLowerCase() %></a>
+  <% if (saved) { %><span class="adm-ok">Saved ✓</span><% } %>
+</p>
+<table class="adm-table card">
+  <tr><th>ID</th><th>Name</th><th>Slug</th><th>Status</th><th>Sort</th><th></th></tr>
+  <% rows.forEach(r => { %>
+  <tr class="<%= r.status==='archived'?'row-arch':'' %>">
+    <td class="num"><%= r.id %></td>
+    <td><b><%= r[spec.nameKey] %></b></td>
+    <td class="mono"><%= spec.slugKey ? (r[spec.slugKey] || '') : '' %></td>
+    <td><span class="st st-<%= (r.status||'').toLowerCase() %>"><%= r.status %></span></td>
+    <td class="num"><%= r.sort_order %></td>
+    <td class="actions">
+      <a class="link" href="/admin/<%= c %>/<%= r.id %>">Edit</a>
+      <% if (r.slug && spec.table === 'products') { %><a class="link" href="/products/<%= r.slug %>" target="_blank">View</a><% } %>
+      <form method="post" action="/admin/<%= c %>/<%= r.id %>/archive" style="display:inline">
+        <input type="hidden" name="_csrf" value="<%= csrf %>">
+        <button class="linkbtn"><%= r.status==='archived'?'Unhide':'Hide' %></button>
+      </form>
+    </td>
+  </tr>
+  <% }); if (!rows.length) { %><tr><td colspan="6" class="muted">Nothing here yet.</td></tr><% } %>
+</table>

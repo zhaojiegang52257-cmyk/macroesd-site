@@ -1,0 +1,130 @@
+<%
+  const gallery = imgs && imgs.length ? imgs : [];
+  const mainImg = gallery.length ? '/img/' + gallery[0].id : placeholder(p.name_en);
+  const paras = (lang==='vi' && p.intro_vi ? p.intro_vi : p.intro_en || '').split('\n').filter(Boolean);
+%>
+<section class="pdp-hero">
+  <div class="wrap pdp-hero-grid">
+    <div>
+      <p class="eyebrow"><%= t('hero_eyebrow') %></p>
+      <h1><%= L(p.name_en, p.name_vi) %></h1>
+      <p class="lead"><%= L(p.short_en, p.short_vi) %></p>
+      <div class="btn-row">
+        <a class="btn btn-pri btn-lg" href="#rfq" id="pdpQuote"><%= t('btn_quote') %></a>
+        <a class="btn btn-wa btn-lg" data-wa data-wa-product="<%= p.slug %>" href="<%= waLink('Hi MacroESD, I am interested in: ' + p.name_en) %>"><%= t('btn_whatsapp') %></a>
+      </div>
+    </div>
+    <div class="pdp-media">
+      <img id="pdpMain" src="<%= mainImg %>" alt="<%= p.name_en %>" fetchpriority="high">
+      <% if (gallery.length > 1) { %>
+      <div class="thumbs">
+        <% gallery.forEach((g,i) => { %>
+        <button class="thumb" onclick="document.getElementById('pdpMain').src='/img/<%= g.id %>'"><img loading="lazy" src="/img/<%= g.id %>" alt="<%= g.alt || p.name_en %>"></button>
+        <% }) %>
+      </div>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<% if (paras.length) { %>
+<section class="sec">
+  <div class="wrap prose">
+    <% paras.forEach(x => { %><p><%= x %></p><% }) %>
+  </div>
+</section>
+<% } %>
+
+<% if (p.benefits && p.benefits.length) { %>
+<section class="sec sec-alt">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('benefits_title') %></h2>
+    <div class="why-grid">
+      <% p.benefits.forEach(b => { %>
+      <div class="why-card"><h3><%= lang==='vi'&&b.vi ? b.vi : b.en %></h3></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (p.specs && p.specs.length) { %>
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('specs_title') %></h2>
+    <table class="spec-table">
+      <% p.specs.forEach(s => { if (s.label || s.value) { %>
+      <tr><th><%= s.label %></th><td><%= s.value %></td></tr>
+      <% }}) %>
+    </table>
+    <p class="muted small">Most dimensions are custom - the table shows typical ranges. Contact us with your exact requirement.</p>
+  </div>
+</section>
+<% } %>
+
+<% if (p.show_divider) { %>
+<section class="sec sec-alt">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('divider_title') %></h2>
+    <p class="sec-lead"><%= t('divider_text') %></p>
+    <div class="divider-visual">
+      <img loading="lazy" src="<%= placeholder('DIVIDER LAYOUT') %>" alt="Custom divider layout">
+      <img loading="lazy" src="<%= placeholder('GRID STRUCTURE') %>" alt="Grid structure">
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (p.features && p.features.length) { %>
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('features_title') %></h2>
+    <ul class="tick-list">
+      <% p.features.forEach(f => { %><li><%= lang==='vi'&&f.vi ? f.vi : f.en %></li><% }) %>
+    </ul>
+  </div>
+</section>
+<% } %>
+
+<% if (p.applications && p.applications.length) { %>
+<section class="sec sec-band">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('apps_title') %></h2>
+    <div class="apps-row">
+      <% p.applications.forEach(a => { %><span class="app-chip"><%= typeof a==='string'?a:(a.en||'') %></span><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (p.use_cases && p.use_cases.length) { %>
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= lang==='vi'?'Use cases':'Typical use cases' %></h2>
+    <div class="case-grid">
+      <% p.use_cases.forEach(u => { %><div class="case-card static"><p><%= lang==='vi'&&u.vi?u.vi:u.en %></p></div><% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<% if (faqs && faqs.length) { %>
+<section class="sec sec-alt">
+  <div class="wrap narrow">
+    <h2 class="sec-title"><%= t('faq_title') %></h2>
+    <div class="faq-list">
+      <% faqs.slice(0,8).forEach(f => { %>
+      <details><summary><%= lang==='vi'&&f.q_vi?f.q_vi:f.q_en %></summary><p><%= lang==='vi'&&f.a_vi?f.a_vi:f.a_en %></p></details>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="cta-band" id="rfq">
+  <div class="wrap narrow">
+    <h2><%= t('need_custom') %></h2>
+    <p><%= t('cta_sub') %></p>
+    <%- include('partials/rfq-form', { preselect: p }) %>
+  </div>
+</section>

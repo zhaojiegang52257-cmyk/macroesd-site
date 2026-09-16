@@ -1,0 +1,118 @@
+<%
+  const plist = (typeof products !== 'undefined' && products && products.length) ? products : [];
+  const pre = (typeof preselect !== 'undefined' && preselect) ? preselect : null;
+%>
+<form class="rfq-form" data-rfq method="post" novalidate>
+  <div class="rfq-progress">
+    <span class="rp-dot on" data-step="1"><%= t('rfq_step1') %></span>
+    <span class="rp-dot" data-step="2"><%= t('rfq_step2') %></span>
+    <span class="rp-dot" data-step="3"><%= t('rfq_step3') %></span>
+  </div>
+
+  <div class="rfq-step" data-panel="1">
+    <div class="prod-choice">
+      <% plist.forEach(p => { %>
+      <label class="pc<%= pre && pre.slug===p.slug ? ' on':'' %>">
+        <input type="radio" name="product_choice" value="<%= p.slug %>" data-kind="<%= p.rfq_kind || 'other' %>" data-name="<%= p.name_en %>" <%= pre && pre.slug===p.slug ? 'checked':'' %>>
+        <b><%= L(p.name_en, p.name_vi) %></b>
+        <span><%= L(p.short_en, p.short_vi) %></span>
+      </label>
+      <% }) %>
+      <label class="pc<%= !plist.length ? ' on':'' %>">
+        <input type="radio" name="product_choice" value="other" data-kind="other" data-name="Other ESD product">
+        <b>Other ESD product</b><span>Tell us what you need</span>
+      </label>
+    </div>
+    <div class="btn-row end"><button type="button" class="btn btn-pri" data-next="2"><%= t('rfq_next') %> →</button></div>
+  </div>
+
+  <div class="rfq-step" data-panel="2" hidden>
+    <fieldset data-kind="corrugated" hidden>
+      <div class="grid2">
+        <label><%= t('field_length') %><input name="length" inputmode="decimal" placeholder="e.g. 600"></label>
+        <label><%= t('field_width') %><input name="width" inputmode="decimal" placeholder="e.g. 400"></label>
+        <label><%= t('field_height') %><input name="height" inputmode="decimal" placeholder="e.g. 250"></label>
+        <label><%= t('field_quantity') %><input name="quantity" inputmode="numeric" placeholder="e.g. 200"></label>
+      </div>
+      <label><%= t('field_divider') %>
+        <select name="divider">
+          <option value=""><%= t('opt_not_sure') %></option>
+          <option><%= t('opt_yes_divider') %></option>
+          <option><%= t('opt_no_divider') %></option>
+        </select>
+      </label>
+      <label><%= t('field_application') %><input name="application" placeholder="PCB transport / SMT WIP ..."></label>
+      <label><%= t('field_extra') %><textarea name="extra" rows="3"></textarea></label>
+    </fieldset>
+
+    <fieldset data-kind="injection" hidden>
+      <div class="grid2">
+        <label><%= t('field_model') %><input name="model" placeholder="Existing model / drawing"></label>
+        <label><%= t('field_quantity') %><input name="quantity" inputmode="numeric"></label>
+      </div>
+      <label><%= t('field_application') %><input name="application"></label>
+      <label><%= t('field_extra') %><textarea name="extra" rows="3"></textarea></label>
+    </fieldset>
+
+    <fieldset data-kind="chair" hidden>
+      <div class="grid2">
+        <label><%= t('field_model') %> / <%= t('field_extra') %><input name="model" placeholder="Requirement"></label>
+        <label><%= t('field_quantity') %><input name="quantity" inputmode="numeric"></label>
+      </div>
+      <label><%= t('field_extra') %><textarea name="extra" rows="3"></textarea></label>
+    </fieldset>
+
+    <fieldset data-kind="mat" hidden>
+      <div class="grid2">
+        <label><%= t('field_length') %><input name="length" inputmode="decimal"></label>
+        <label><%= t('field_width') %><input name="width" inputmode="decimal"></label>
+        <label><%= t('field_thickness') %><input name="thickness" inputmode="decimal"></label>
+        <label><%= t('field_quantity') %><input name="quantity" inputmode="numeric"></label>
+        <label><%= t('field_color') %><input name="color"></label>
+      </div>
+      <label><%= t('field_extra') %><textarea name="extra" rows="3"></textarea></label>
+    </fieldset>
+
+    <fieldset data-kind="other" hidden>
+      <label><%= t('field_product_other') %><input name="product_text" placeholder="What product do you need?"></label>
+      <div class="grid2">
+        <label><%= t('field_quantity') %><input name="quantity" inputmode="numeric"></label>
+      </div>
+      <label><%= t('field_extra') %><textarea name="extra" rows="3"></textarea></label>
+    </fieldset>
+
+    <div class="btn-row between">
+      <button type="button" class="btn btn-ghost" data-next="1">← <%= t('rfq_back') %></button>
+      <button type="button" class="btn btn-pri" data-next="3"><%= t('rfq_next') %> →</button>
+    </div>
+  </div>
+
+  <div class="rfq-step" data-panel="3" hidden>
+    <div class="grid2">
+      <label><%= t('field_name') %><input name="name" required autocomplete="name"></label>
+      <label><%= t('field_company') %><input name="company" required autocomplete="organization"></label>
+      <label><%= t('field_country') %><input name="country" required autocomplete="country-name" placeholder="Vietnam"></label>
+      <label><%= t('field_email') %><input name="email" type="email" required autocomplete="email"></label>
+    </div>
+    <label><%= t('field_whatsapp') %><input name="whatsapp" type="tel" required placeholder="+84 912 345 678" autocomplete="tel"></label>
+    <label><%= t('field_message') %><textarea name="message" rows="3"></textarea></label>
+    <label class="hp-field" aria-hidden="true"><input name="website" tabindex="-1" autocomplete="off"></label>
+    <p class="rfq-err" data-err hidden><%= t('form_err') %></p>
+    <div class="btn-row between">
+      <button type="button" class="btn btn-ghost" data-next="2">← <%= t('rfq_back') %></button>
+      <button type="submit" class="btn btn-pri btn-lg"><%= t('rfq_submit') %></button>
+    </div>
+  </div>
+
+  <div class="rfq-done" data-done hidden>
+    <h3><%= t('thx_title') %></h3>
+    <p><%= t('thx_text') %></p>
+    <p class="lead-code"><%= t('thx_code') %>: <b data-leadcode></b></p>
+    <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+  </div>
+  <input type="hidden" name="load_ts" value="">
+  <input type="hidden" name="kind" value="">
+  <input type="hidden" name="product" value="">
+  <input type="hidden" name="page" value="">
+  <input type="hidden" name="visitor" value="">
+</form>

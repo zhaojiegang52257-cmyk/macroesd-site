@@ -1,0 +1,51 @@
+<%
+const _saved = (typeof saved !== 'undefined') && saved;
+const _settingsKey = (typeof settingsKey !== 'undefined') ? settingsKey : null;
+const _c = (typeof c !== 'undefined') ? c : '';
+const _row = (typeof row !== 'undefined') ? row : null;
+%>
+<h1><%= title %></h1>
+<p class="adm-sub">
+  <a class="link" href="javascript:history.back()">← back</a>
+  <% if (_saved) { %><span class="adm-ok">Saved ✓</span><% } %>
+</p>
+<form class="card adm-form" method="post" action="<%= _settingsKey ? '/admin/page/' + _settingsKey : '/admin/' + _c + '/save' %>">
+  <input type="hidden" name="_csrf" value="<%= csrf %>">
+  <% if (_row) { %><input type="hidden" name="id" value="<%= _row.id %>"><% } %>
+  <% fields.forEach(f => { %>
+    <% const v = values[f.k] !== undefined ? values[f.k] : ''; %>
+    <% if (f.t === 'check') { %>
+    <label class="chk"><input type="checkbox" name="<%= f.k %>" value="1" <%= v ? 'checked' : '' %>> <%= f.l %></label>
+    <% } else if (f.t === 'number') { %>
+    <label class="num-field"><%= f.l %><input type="number" name="<%= f.k %>" value="<%= v || 0 %>"></label>
+    <% } else if (f.t === 'select') { %>
+    <label><%= f.l %>
+      <select name="<%= f.k %>">
+        <% (f.options || []).forEach(o => { %>
+        <option value="<%= o[0] %>" <%= String(v) === String(o[0]) ? 'selected' : '' %>><%= o[1] %></option>
+        <% }) %>
+      </select>
+    </label>
+    <% } else if (f.t === 'textarea' || f.t === 'p' || f.t === 'lines' || f.t === 'blines' || f.t === 'kv') { %>
+    <label><%= f.l %><textarea name="<%= f.k %>" rows="<%= f.t==='p'?6:8 %>" class="<%= f.t !== 'textarea' ? 'mono' : '' %>"><%= v %></textarea>
+      <% if (f.t==='lines') { %><em>one item per line</em><% } %>
+      <% if (f.t==='blines') { %><em>one per line, format: English | Tiếng Việt (put ":" details after | for Why-items)</em><% } %>
+      <% if (f.t==='kv') { %><em>one per line, format: Label | Value</em><% } %>
+    </label>
+    <% } else if (f.t === 'json') { %>
+    <label><%= f.l %><textarea name="<%= f.k %>" rows="18" class="mono"><%= v %></textarea>
+      <em><%= f.hint || '' %></em>
+    </label>
+    <% } else { %>
+    <label><%= f.l %><input type="text" name="<%= f.k %>" value="<%= v %>" <%= f.req ? 'required' : '' %>>
+      <% if (f.hint) { %><em><%= f.hint %></em><% } %>
+    </label>
+    <% } %>
+  <% }) %>
+  <div class="adm-form-foot">
+    <button class="btn-adm primary">Save</button>
+    <% if (_row && spec.slugKey && _settingsKey !== 'site') { %>
+    <a class="btn-adm ghost" href="/admin/images/<%= _c === 'products' ? 'product' : (_c === 'cases' ? 'case' : _c === 'landings' ? 'landing' : _c) %>/<%= _row[spec.slugKey] %>" target="_blank">🖼 Images for this item</a>
+    <% } %>
+  </div>
+</form>

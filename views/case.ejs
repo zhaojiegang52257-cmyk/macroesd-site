@@ -1,0 +1,26 @@
+<% const lines = v => String(v||'').split('\n').filter(Boolean); %>
+<section class="pdp-hero">
+  <div class="wrap">
+    <p class="eyebrow"><%= c.industry %><%= c.country ? ' · ' + c.country : '' %></p>
+    <h1><%= c.customer_display %></h1>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap narrow prose">
+    <% if (c.challenge_en) { %><h2>Customer challenge</h2><% lines(c.challenge_en).forEach(x=>{%><p><%= x %></p><%}) %><% } %>
+    <% if (c.requirement_en) { %><h2>Requirement</h2><% lines(c.requirement_en).forEach(x=>{%><p><%= x %></p><%}) %><% } %>
+    <% if (c.solution_en) { %><h2>Our solution</h2><% lines(c.solution_en).forEach(x=>{%><p><%= x %></p><%}) %><% } %>
+    <% if (c.result_en) { %><h2>Result</h2><% lines(c.result_en).forEach(x=>{%><p><%= x %></p><%}) %><% } %>
+    <% if (imgs && imgs.length) { %><div class="factory-imgs gallery"><% imgs.forEach(g=>{ %><img loading="lazy" src="/img/<%= g.id %>" alt="<%= g.alt %>"><% }) %></div><% } %>
+    <% if (c.products && c.products.length) { %><h2>Products used</h2><div class="apps-row"><% c.products.forEach(ps=>{ %><a class="app-chip" href="/products/<%= ps %>"><%= ps %></a><% }) %></div><% } %>
+  </div>
+</section>
+<section class="cta-band">
+  <div class="wrap center">
+    <h2><%= t('sec_cta') %></h2>
+    <div class="btn-row center">
+      <a class="btn btn-pri btn-lg" href="/get-a-quote"><%= t('btn_quote') %></a>
+      <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+    </div>
+  </div>
+</section>

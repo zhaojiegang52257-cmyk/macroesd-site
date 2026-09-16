@@ -1,0 +1,51 @@
+<h1>Lead · <%= lead.code %></h1>
+<p class="adm-sub"><a class="link" href="/admin/leads">← all leads</a> <% if (saved) { %><span class="adm-ok">Saved ✓</span><% } %></p>
+<div class="adm-cols">
+  <div class="adm-col card">
+    <h3>Customer</h3>
+    <table class="kv-table">
+      <tr><th>Name</th><td><%= lead.name %></td></tr>
+      <tr><th>Company</th><td><%= lead.company %></td></tr>
+      <tr><th>Country</th><td><%= lead.country %></td></tr>
+      <tr><th>Email</th><td><a href="mailto:<%= lead.email %>"><%= lead.email %></a></td></tr>
+      <tr><th>WhatsApp</th><td><a href="https://wa.me/<%= String(lead.whatsapp||'').replace(/[^\d]/g,'') %>" target="_blank"><%= lead.whatsapp %></a></td></tr>
+    </table>
+    <h3>Requirement</h3>
+    <table class="kv-table">
+      <tr><th>Product</th><td><%= lead.product %></td></tr>
+      <tr><th>Quantity</th><td><%= lead.quantity %></td></tr>
+      <% Object.entries(req2).forEach(([k,v]) => { if (v) { %><tr><th><%= k %></th><td><%= v %></td></tr><% } }) %>
+      <% if (lead.message) { %><tr><th>Message</th><td><%= lead.message %></td></tr><% } %>
+    </table>
+    <h3>Advertising source</h3>
+    <table class="kv-table">
+      <tr><th>utm_source</th><td class="mono"><%= lead.utm_source || '—' %></td></tr>
+      <tr><th>utm_medium</th><td class="mono"><%= lead.utm_medium || '—' %></td></tr>
+      <tr><th>utm_campaign</th><td class="mono"><%= lead.utm_campaign || '—' %></td></tr>
+      <tr><th>utm_content</th><td class="mono"><%= lead.utm_content || '—' %></td></tr>
+      <tr><th>Landing page</th><td class="mono"><%= lead.landing_page || '—' %></td></tr>
+      <tr><th>Referrer</th><td class="mono"><%= lead.referrer || '—' %></td></tr>
+      <tr><th>CAPI result</th><td class="mono"><%= lead.capi_result || '—' %></td></tr>
+    </table>
+  </div>
+  <div class="adm-col card">
+    <h3>Follow-up</h3>
+    <form method="post" action="/admin/leads/<%= lead.id %>">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <label>Status
+        <select name="status">
+          <% leadStatuses.forEach(s => { %><option value="<%= s %>" <%= lead.status===s?'selected':'' %>><%= s %></option><% }) %>
+        </select>
+      </label>
+      <label>Notes<textarea name="notes" rows="8"><%= lead.notes %></textarea></label>
+      <button class="btn-adm primary">Save</button>
+    </form>
+    <h3>Timeline</h3>
+    <ul class="timeline">
+      <% const tl = ev.length ? ev : JSON.parse(lead.events || '[]'); %>
+      <% tl.forEach(e => { %>
+      <li><b><%= e.type %></b> <span class="mono"><%= String(e.created_at || e.at || '').slice(5,16).replace('T',' ') %></span><div class="muted mono"><%= e.path %></div></li>
+      <% }); if (!tl.length) { %><li class="muted">No recorded events.</li><% } %>
+    </ul>
+  </div>
+</div>

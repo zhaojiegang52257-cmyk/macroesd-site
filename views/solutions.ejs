@@ -1,0 +1,19 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1><%= t('sec_solutions') %></h1>
+    <p class="sec-lead"><%= L('ESD packaging and handling systems designed around your production flow.', 'Giải pháp bao bì & vận chuyển ESD theo dòng sản xuất của bạn.') %></p>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap">
+    <div class="sol-grid big">
+      <% solutions.forEach(s => { %>
+      <a class="sol-card" href="/solutions/<%= s.slug %>">
+        <h3><%= L(s.title_en, s.title_vi) %></h3>
+        <p><%= L(s.subtitle_en, '') %></p>
+        <span class="pcard-link"><%= t('learn_more') %> →</span>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>

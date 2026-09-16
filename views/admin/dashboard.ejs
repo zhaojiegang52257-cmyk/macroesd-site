@@ -1,0 +1,38 @@
+<h1>Dashboard</h1>
+<p class="adm-sub">Lead pipeline since launch. Data comes from RFQ submissions on the live site.</p>
+<div class="kpi-row">
+  <div class="kpi"><b><%= stats.today %></b><span>Today's leads</span></div>
+  <div class="kpi"><b><%= stats.thisWeek %></b><span>This week</span></div>
+  <div class="kpi"><b><%= stats.total %></b><span>Total leads</span></div>
+  <div class="kpi"><b><%= (byStatus.filter(s=>s.k==='New')[0]||{c:0}).c %></b><span>New</span></div>
+  <div class="kpi"><b><%= (byStatus.filter(s=>s.k==='Quoted')[0]||{c:0}).c %></b><span>Quoted</span></div>
+  <div class="kpi win"><b><%= (byStatus.filter(s=>s.k==='Won')[0]||{c:0}).c %></b><span>Won</span></div>
+</div>
+<div class="adm-cols">
+  <div class="adm-col card">
+    <h3>Leads by product</h3>
+    <table class="adm-table mini"><% byProduct.forEach(r=>{ %><tr><td><%= r.k %></td><td class="num"><%= r.c %></td></tr><% }); if(!byProduct.length){ %><tr><td class="muted">No data yet</td></tr><% } %></table>
+  </div>
+  <div class="adm-col card">
+    <h3>Leads by country</h3>
+    <table class="adm-table mini"><% byCountry.forEach(r=>{ %><tr><td><%= r.k %></td><td class="num"><%= r.c %></td></tr><% }); if(!byCountry.length){ %><tr><td class="muted">No data yet</td></tr><% } %></table>
+  </div>
+  <div class="adm-col card">
+    <h3>Leads by source / campaign</h3>
+    <table class="adm-table mini"><% bySource.forEach(r=>{ %><tr><td><%= r.k %></td><td class="num"><%= r.c %></td></tr><% }); byCampaign.forEach(r=>{ %><tr><td>📣 <%= r.k %></td><td class="num"><%= r.c %></td></tr><% }); if(!bySource.length&&!byCampaign.length){ %><tr><td class="muted">No data yet</td></tr><% } %></table>
+  </div>
+</div>
+<div class="card">
+  <h3>Latest leads</h3>
+  <table class="adm-table">
+    <tr><th>Code</th><th>Name</th><th>Company</th><th>Country</th><th>Product</th><th>Source</th><th>Status</th><th></th></tr>
+    <% rows.forEach(l => { %>
+    <tr>
+      <td><%= l.code %></td><td><%= l.name %></td><td><%= l.company %></td><td><%= l.country %></td>
+      <td><%= l.product %></td><td><%= l.utm_source || l.referrer ? '📣 ' + (l.utm_source||'referral') : 'direct' %></td>
+      <td><span class="st st-<%= l.status.toLowerCase() %>"><%= l.status %></span></td>
+      <td><a class="link" href="/admin/leads/<%= l.id %>">open →</a></td>
+    </tr>
+    <% }); if (!rows.length) { %><tr><td colspan="8" class="muted">No leads yet. Submit a test RFQ from the site to verify the pipeline.</td></tr><% } %>
+  </table>
+</div>

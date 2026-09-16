@@ -1,0 +1,51 @@
+<% const paras = (lang==='vi'&&s.intro_vi?s.intro_vi:s.intro_en||'').split('\n').filter(Boolean); %>
+<section class="pdp-hero">
+  <div class="wrap">
+    <p class="eyebrow"><%= t('sec_solutions') %></p>
+    <h1><%= L(s.title_en, s.title_vi) %></h1>
+    <p class="lead"><%= s.subtitle_en %></p>
+    <div class="btn-row">
+      <a class="btn btn-pri btn-lg" href="/get-a-quote"><%= t('btn_quote') %></a>
+      <a class="btn btn-wa btn-lg" data-wa href="<%= waLink('Hi MacroESD, about ' + s.title_en + ': ') %>"><%= t('btn_whatsapp') %></a>
+    </div>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap prose narrow">
+    <% paras.forEach(x => { %><p><%= x %></p><% }) %>
+  </div>
+</section>
+<% if (points && points.length) { %>
+<section class="sec sec-alt">
+  <div class="wrap">
+    <div class="why-grid">
+      <% points.forEach(pt => { %>
+      <div class="why-card"><h3><%= lang==='vi'&&pt.vi_t?pt.vi_t:pt.title %></h3><p><%= lang==='vi'&&pt.vi_d?pt.vi_d:pt.desc %></p></div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('sec_products') %></h2>
+    <div class="prod-grid">
+      <% products.filter(p=>p.is_core).forEach(p => { %>
+      <a class="pcard pcard-core" href="/products/<%= p.slug %>">
+        <div class="pcard-img"><img loading="lazy" src="<%= placeholder(p.name_en) %>" alt="<%= p.name_en %>"></div>
+        <div class="pcard-body"><h3><%= p.name_en %></h3><span class="pcard-link"><%= t('view_product') %> →</span></div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<section class="cta-band">
+  <div class="wrap center">
+    <h2><%= t('sec_cta') %></h2>
+    <p><%= t('cta_sub') %></p>
+    <div class="btn-row center">
+      <a class="btn btn-pri btn-lg" href="/get-a-quote"><%= t('btn_quote') %></a>
+      <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+    </div>
+  </div>
+</section>

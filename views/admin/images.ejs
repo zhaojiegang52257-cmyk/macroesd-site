@@ -1,0 +1,25 @@
+<h1>Images · <%= type %>/<%= key %></h1>
+<p class="adm-sub"><a class="link" href="/admin/images">← all images</a> <% if (saved) { %><span class="adm-ok">Uploaded ✓</span><% } %></p>
+<div class="card">
+  <h3>Upload (photos are compressed automatically in your browser)</h3>
+  <form method="post" action="/admin/images/<%= type %>/<%= key %>/upload" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="<%= csrf %>">
+    <label>Alt text (SEO) <input type="text" name="alt" value="<%= type %> <%= key %>"></label>
+    <label>Files <input type="file" id="imgFiles" name="files" accept="image/jpeg,image/png,image/webp" multiple required></label>
+    <p class="muted" id="imgInfo"></p>
+    <button class="btn-adm primary" type="submit">Upload</button>
+  </form>
+</div>
+<div class="img-grid">
+  <% rows.forEach(r => { %>
+  <div class="img-card">
+    <img src="/img/<%= r.id %>" alt="<%= r.alt %>">
+    <div class="img-meta"><%= r.alt %> · #<%= r.id %> · <%= r.sort_order %></div>
+    <form method="post" action="/admin/images/item/<%= r.id %>/delete" onsubmit="return confirm('Delete this image?')">
+      <input type="hidden" name="_csrf" value="<%= csrf %>">
+      <input type="hidden" name="back" value="/admin/images/<%= type %>/<%= key %>">
+      <button class="btn-adm danger">Delete</button>
+    </form>
+  </div>
+  <% }); if (!rows.length) { %><p class="muted">Nothing uploaded for this slot yet - the site shows a labeled placeholder instead.</p><% } %>
+</div>

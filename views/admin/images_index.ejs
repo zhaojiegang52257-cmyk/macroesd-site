@@ -1,0 +1,23 @@
+<h1>Images</h1>
+<p class="adm-sub">All photos on the site are uploaded here - nothing is hardcoded. Placeholders show until you upload.</p>
+<div class="card">
+  <h3>Quick jumps</h3>
+  <p class="chip-row">
+    <a class="btn-adm ghost" href="/admin/images/home/hero">Home hero</a>
+    <a class="btn-adm ghost" href="/admin/images/about/factory">About / factory</a>
+    <a class="btn-adm ghost" href="/admin/images/landing/esd-box-solution">Landing: esd-box-solution</a>
+  </p>
+</div>
+<div class="card">
+  <h3>Uploaded so far</h3>
+  <table class="adm-table">
+    <tr><th>Owner</th><th>Images</th><th></th></tr>
+    <% rows.forEach(r => { %>
+    <tr>
+      <td class="mono"><%= r.owner_type %> / <%= r.owner_key %></td>
+      <td class="num"><%= r.c %></td>
+      <td><a class="link" href="/admin/images/<%= r.owner_type %>/<%= r.owner_key %>">manage →</a></td>
+    </tr>
+    <% }); if (!rows.length) { %><tr><td colspan="3" class="muted">No images uploaded yet.</td></tr><% } %>
+  </table>
+</div>

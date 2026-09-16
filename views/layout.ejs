@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= meta.title || 'MacroESD' %></title>
+<meta name="description" content="<%= meta.desc || '' %>">
+<link rel="canonical" href="<%= origin + curPath %>">
+<link rel="alternate" hreflang="en" href="<%= origin + altPath.replace('/vi','') || origin + '/' %>">
+<link rel="alternate" hreflang="vi" href="<%= origin + (lang==='vi' ? curPath : '/vi' + (curPath==='/'?'':curPath)) %>">
+<meta property="og:title" content="<%= meta.title || 'MacroESD' %>">
+<meta property="og:description" content="<%= meta.desc || '' %>">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230e1c30'/><text x='16' y='22' font-size='15' font-family='Arial' font-weight='bold' fill='%23ffc629' text-anchor='middle'>M</text></svg>">
+<link rel="stylesheet" href="/static/css/style.css">
+<% const px = (tracking.meta_pixel_id||'').trim(); %>
+<% if (px) { %>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/fbevents.js');
+fbq('init','<%= px %>');
+<% const tec=(tracking.meta_test_event_code||'').trim(); if (tec) { %>fbq('set','testEventCode','<%= tec %>','<%= px %>');<% } %>
+fbq('track','PageView');
+</script>
+<% } %>
+<% const ga = (tracking.ga4_id||'').trim(); %>
+<% if (ga) { %>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%= ga %>"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','<%= ga %>');</script>
+<% } %>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization","name":"<%= site.brand || 'MacroESD' %>","url":"<%= origin %>","email":"<%= site.email || '' %>","description":"ESD packaging supplier - corrugated plastic boxes, injection boxes, chairs and mats for electronics manufacturing, produced through specialized partner factories."}
+</script>
+</head>
+<body data-pixel="<%= px %>" data-ga="<%= ga %>">
+<header class="site-head<%= typeof landingMode!=='undefined'&&landingMode?' head-min':'' %>">
+  <div class="wrap head-in">
+    <a class="logo" href="<%= lang==='vi' ? '/vi' : '/' %>"><span class="logo-m">M</span><span><%= site.brand || 'MacroESD' %></span><em>ESD Packaging</em></a>
+    <% if (typeof landingMode==='undefined'||!landingMode) { %>
+    <nav class="nav" id="nav">
+      <a href="<%= lang==='vi' ? '/vi/products' : '/products' %>"><%= t('nav_products') %></a>
+      <a href="<%= lang==='vi' ? '/vi/solutions' : '/solutions' %>"><%= t('nav_solutions') %></a>
+      <a href="<%= lang==='vi' ? '/vi/case-studies' : '/case-studies' %>"><%= t('nav_cases') %></a>
+      <a href="<%= lang==='vi' ? '/vi/about-us' : '/about-us' %>"><%= t('nav_about') %></a>
+    </nav>
+    <% } %>
+    <div class="head-cta">
+      <a class="btn btn-wa btn-sm" data-wa href="<%= waLink() %>"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.5 1.9 1.1.9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.2.3-.2.6-.1l2 .9c.3.2.5.3.5.4.1.2.1.7-.1 1.3z"/></svg><span class="hide-sm"><%= t('btn_whatsapp') %></span></a>
+      <a class="btn btn-pri btn-sm" href="<%= lang==='vi' ? '/vi/get-a-quote' : '/get-a-quote' %>"><%= t('btn_quote') %></a>
+      <a class="lang-sw" href="<%= altPath %>"><%= t('lang_switch') %></a>
+      <% if (typeof landingMode==='undefined'||!landingMode) { %><button class="menu-btn" id="menuBtn" aria-label="menu"><span></span><span></span><span></span></button><% } %>
+    </div>
+  </div>
+</header>
+
+<%- body %>
+
+<footer class="site-foot">
+  <div class="wrap foot-grid">
+    <div>
+      <div class="logo foot-logo"><span class="logo-m">M</span> <%= site.brand || 'MacroESD' %></div>
+      <p><%= L('ESD packaging supplier for PCB, SMT and electronics factories. Custom sizes, custom dividers, reusable systems.', 'Nhà cung cấp bao bì ESD cho nhà máy PCB, SMT.') %></p>
+      <p class="muted"><%= site.company_legal || '' %></p>
+    </div>
+    <div>
+      <h4><%= t('footer_quick') %></h4>
+      <a href="/products"><%= t('nav_products') %></a>
+      <a href="/solutions"><%= t('nav_solutions') %></a>
+      <a href="/case-studies"><%= t('nav_cases') %></a>
+      <a href="/about-us"><%= t('nav_about') %></a>
+      <a href="/get-a-quote"><%= t('btn_quote') %></a>
+    </div>
+    <div>
+      <h4><%= t('footer_contact') %></h4>
+      <p><a data-wa href="<%= waLink() %>">WhatsApp: <%= site.whatsapp %></a></p>
+      <p>Email: <a href="mailto:<%= site.email %>"><%= site.email %></a></p>
+      <p class="muted"><%= site.address || '' %></p>
+    </div>
+  </div>
+  <div class="wrap foot-btm">© <%= new Date().getFullYear() %> <%= site.brand || 'MacroESD' %> · <%= t('footer_rights') %></div>
+</footer>
+
+<a class="wa-float" data-wa href="<%= waLink() %>" aria-label="WhatsApp">
+  <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.5 1.9 1.1.9 1.9 1.2 2.2 1.3.3.1.4.1.6-.1l.9-1c.2-.2.3-.2.6-.1l2 .9c.3.2.5.3.5.4.1.2.1.7-.1 1.3z"/></svg>
+</a>
+<script src="/static/js/site.js"></script>
+</body>
+</html>

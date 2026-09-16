@@ -1,0 +1,23 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1><%= t('sec_cases') %></h1>
+    <p class="sec-lead"><%= t('cases_empty') %></p>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap">
+    <% if (cases.length) { %>
+    <div class="case-grid">
+      <% cases.forEach(c => { %>
+      <a class="case-card" href="/case-studies/<%= c.slug %>">
+        <span class="case-tag"><%= c.industry %> · <%= c.country %></span>
+        <h3><%= c.customer_display %></h3>
+        <p><%= String(c.challenge_en||'').split('\n')[0] %></p>
+      </a>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <div class="empty-box"><%= t('cases_empty') %></div>
+    <% } %>
+  </div>
+</section>

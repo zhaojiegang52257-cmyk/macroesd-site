@@ -1,0 +1,119 @@
+<%
+// Ad landing page renderer: blocks from CMS JSON
+function imgFor(block, fallbackLabel) {
+  if (block && block.image && block.image.startsWith('product:')) {
+    const slug = block.image.slice(8);
+    const prod = (typeof products!=='undefined'?products:[]).find(x => x.slug === slug);
+    if (prod) return placeholder(prod.name_en);
+  }
+  if (imgs && imgs.length) return '/img/' + imgs[0].id;
+  return placeholder(fallbackLabel || 'PRODUCT');
+}
+const hero = lp.blocks.find(b => b.type === 'hero');
+const rest = lp.blocks.filter(b => b.type !== 'hero');
+%>
+<% if (hero) { %>
+<section class="lp-hero">
+  <div class="wrap lp-hero-grid">
+    <div>
+      <% if (hero.eyebrow) { %><p class="eyebrow warn"><%= hero.eyebrow %></p><% } %>
+      <h1><%= L(hero.title, hero.title_vi) %></h1>
+      <p class="lead"><%= L(hero.sub, hero.sub_vi) %></p>
+      <div class="btn-row">
+        <a class="btn btn-pri btn-lg" href="#rfq-anchor"><%= t('btn_quote') %></a>
+        <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+      </div>
+    </div>
+    <div class="pdp-media"><img src="<%= imgFor(hero) %>" alt="<%= lp.name %>" fetchpriority="high"></div>
+  </div>
+</section>
+<% } %>
+
+<% rest.forEach((b, i) => { %>
+  <% if (b.type === 'text') { %>
+  <section class="sec<%= i%2 ? ' sec-alt':'' %>">
+    <div class="wrap narrow prose">
+      <h2><%= b.title %></h2>
+      <% (L(b.lines, b.lines_vi)||[]).forEach(x => { %><p class="<%= /Source:/i.test(x)?'src-note':'' %>"><%= x %></p><% }) %>
+    </div>
+  </section>
+  <% } else if (b.type === 'bullets') { %>
+  <section class="sec">
+    <div class="wrap narrow">
+      <h2><%= b.title %></h2>
+      <ul class="tick-list"><% (b.items||[]).forEach(x => { %><li><%= typeof x==='string'?x:L(x.en,x.vi) %></li><% }) %></ul>
+    </div>
+  </section>
+  <% } else if (b.type === 'benefits') { %>
+  <section class="sec<%= i%2 ? ' sec-alt':'' %>">
+    <div class="wrap">
+      <h2 class="sec-title"><%= b.title %></h2>
+      <div class="why-grid">
+        <% (b.items||[]).forEach(x => { %><div class="why-card"><h3><%= L(x.en,x.vi) %></h3></div><% }) %>
+      </div>
+    </div>
+  </section>
+  <% } else if (b.type === 'product') { %>
+  <% const prod = products.find(x => x.slug === b.slug); if (prod) { %>
+  <section class="sec">
+    <div class="wrap split">
+      <div class="pdp-media"><img loading="lazy" src="<%= placeholder(prod.name_en) %>" alt="<%= prod.name_en %>"></div>
+      <div>
+        <h2><%= prod.name_en %></h2>
+        <p class="sec-lead"><%= prod.short_en %></p>
+        <ul class="tick-list"><% (prod.benefits||[]).slice(0,5).forEach(x => { %><li><%= x.en %></li><% }) %></ul>
+        <a class="btn btn-ghost" href="/products/<%= prod.slug %>"><%= t('view_product') %> →</a>
+      </div>
+    </div>
+  </section>
+  <% } } else if (b.type === 'proof') { %>
+  <section class="sec<%= i%2 ? ' sec-alt':'' %>">
+    <div class="wrap">
+      <h2 class="sec-title"><%= b.title %></h2>
+      <div class="case-grid">
+        <% (b.items||[]).forEach(x => { %><div class="case-card static"><p><%= L(x.en,x.vi) %></p></div><% }) %>
+      </div>
+    </div>
+  </section>
+  <% } else if (b.type === 'image') { %>
+  <section class="sec">
+    <div class="wrap">
+      <h2 class="sec-title"><%= b.title || t('sec_factory') %></h2>
+      <% if (imgs && imgs.length) { %>
+      <div class="factory-imgs gallery">
+        <% imgs.forEach(g => { %><img loading="lazy" src="/img/<%= g.id %>" alt="<%= g.alt || '' %>"><% }) %>
+      </div>
+      <% } else { %><img loading="lazy" src="<%= placeholder('FACTORY PHOTOS - UPLOAD IN ADMIN') %>" alt="Factory"><% } %>
+    </div>
+  </section>
+  <% } else if (b.type === 'faq') { %>
+  <section class="sec<%= i%2 ? ' sec-alt':'' %>">
+    <div class="wrap narrow">
+      <h2 class="sec-title"><%= t('faq_title') %></h2>
+      <div class="faq-list">
+        <% faqs.filter(f => !b.category || f.category===b.category || f.category==='general').slice(0,6).forEach(f => { %>
+        <details><summary><%= f.q_en %></summary><p><%= f.a_en %></p></details>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+  <% } else if (b.type === 'form') { %>
+  <section class="cta-band" id="rfq-anchor">
+    <div class="wrap narrow">
+      <h2><%= b.title || t('rfq_title') %></h2>
+      <p><%= b.sub || t('cta_sub') %></p>
+      <%- include('partials/rfq-form') %>
+    </div>
+  </section>
+  <% } else if (b.type === 'cta') { %>
+  <section class="sec">
+    <div class="wrap center">
+      <h2><%= b.title %></h2>
+      <p class="sec-lead"><%= b.text %></p>
+      <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= b.button || t('btn_whatsapp') %></a>
+    </div>
+  </section>
+  <% } else if (b.type === 'html') { %>
+  <section class="sec"><div class="wrap"><%- b.html %></div></section>
+  <% } %>
+<% }) %>

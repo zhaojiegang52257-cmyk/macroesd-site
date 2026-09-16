@@ -1,0 +1,30 @@
+<h1>Leads</h1>
+<p class="adm-sub">
+  <form method="get" action="/admin/leads" class="filter-form">
+    <input type="text" name="q" placeholder="search name / company / email / code" value="<%= q %>">
+    <select name="status">
+      <option value="">All statuses</option>
+      <% leadStatuses.forEach(s => { %><option value="<%= s %>" <%= st===s?'selected':'' %>><%= s %></option><% }) %>
+    </select>
+    <button class="btn-adm">Filter</button>
+    <a class="btn-adm ghost" href="/admin/leads/export.csv">⬇ Export CSV</a>
+  </form>
+</p>
+<table class="adm-table card">
+  <tr><th>Code</th><th>Date</th><th>Name</th><th>Company</th><th>Country</th><th>WhatsApp</th><th>Product</th><th>Qty</th><th>Source / Campaign</th><th>Status</th><th></th></tr>
+  <% rows.forEach(l => { %>
+  <tr>
+    <td class="mono"><%= l.code %></td>
+    <td class="mono"><%= String(l.created_at||'').slice(0,16).replace('T',' ') %></td>
+    <td><%= l.name %></td>
+    <td><%= l.company %></td>
+    <td><%= l.country %></td>
+    <td class="mono"><%= l.whatsapp %></td>
+    <td><%= l.product %></td>
+    <td class="num"><%= l.quantity %></td>
+    <td><%= [l.utm_source, l.utm_campaign].filter(Boolean).join(' / ') || '—' %></td>
+    <td><span class="st st-<%= l.status.toLowerCase() %>"><%= l.status %></span></td>
+    <td><a class="link" href="/admin/leads/<%= l.id %>">open →</a></td>
+  </tr>
+  <% }); if (!rows.length) { %><tr><td colspan="11" class="muted">No leads found.</td></tr><% } %>
+</table>

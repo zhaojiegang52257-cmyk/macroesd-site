@@ -1,0 +1,152 @@
+<%
+  const heroImg = (homeImgs && homeImgs.length) ? '/img/' + homeImgs[0].id : null;
+  const core = products.filter(p => p.is_core);
+  const rest = products.filter(p => !p.is_core);
+%>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow"><%= hp.hero_eyebrow || t('hero_eyebrow') %></p>
+      <h1><%= L(hp.hero_title, hp.hero_title_vi) %></h1>
+      <p class="lead"><%= L(hp.hero_sub, hp.hero_sub_vi) %></p>
+      <div class="btn-row">
+        <a class="btn btn-pri btn-lg" href="/get-a-quote"><%= t('btn_quote') %></a>
+        <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+      </div>
+      <ul class="trust-line">
+        <li>✓ Custom sizes, no mold</li>
+        <li>✓ Produced to IEC 61340</li>
+        <li>✓ Factory-direct pricing</li>
+      </ul>
+    </div>
+    <div class="hero-media">
+      <img src="<%= heroImg || placeholder('ESD Corrugated Plastic Boxes') %>" alt="ESD corrugated plastic boxes" <%= heroImg ? 'fetchpriority="high"' : '' %>>
+      <div class="hero-chip"><b>Core product</b><span>ESD Corrugated Plastic Box</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('sec_products') %></h2>
+    <p class="sec-lead"><%= t('products_lead') %></p>
+    <div class="prod-grid">
+      <% core.forEach(p => { %>
+      <a class="pcard pcard-core" data-vc="<%= p.slug %>" href="/products/<%= p.slug %>">
+        <div class="pcard-img"><img loading="eager" src="<%= placeholder(p.name_en) %>" alt="<%= p.name_en %>"></div>
+        <div class="pcard-body">
+          <h3><%= L(p.name_en, p.name_vi) %></h3>
+          <p><%= L(p.short_en, p.short_vi) %></p>
+          <span class="pcard-link"><%= t('view_product') %> →</span>
+        </div>
+      </a>
+      <% }) %>
+      <% rest.forEach(p => { %>
+      <a class="pcard" data-vc="<%= p.slug %>" href="/products/<%= p.slug %>">
+        <div class="pcard-img"><img loading="lazy" src="<%= placeholder(p.name_en) %>" alt="<%= p.name_en %>"></div>
+        <div class="pcard-body">
+          <h3><%= L(p.name_en, p.name_vi) %></h3>
+          <p><%= L(p.short_en, p.short_vi) %></p>
+          <span class="pcard-link"><%= t('view_product') %> →</span>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-alt">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('sec_why') %></h2>
+    <div class="why-grid">
+      <% why.forEach(w => { %>
+      <div class="why-card">
+        <h3><%= lang==='vi'&&w.vi_t ? w.vi_t : w.title %></h3>
+        <p><%= lang==='vi'&&w.vi_d ? w.vi_d : w.desc %></p>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('sec_solutions') %></h2>
+    <div class="sol-grid">
+      <% solutions.forEach(s => { %>
+      <a class="sol-card" href="/solutions/<%= s.slug %>">
+        <h3><%= L(s.title_en, s.title_vi) %></h3>
+        <p><%= L(s.subtitle_en, '') %></p>
+        <span class="pcard-link"><%= t('learn_more') %> →</span>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<section class="sec sec-band">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('sec_apps') %></h2>
+    <div class="apps-row">
+      <% (hp.apps_items||[]).forEach(a => { %><span class="app-chip"><%= a %></span><% }) %>
+    </div>
+  </div>
+</section>
+
+<% if (hp.show_cases) { %>
+<section class="sec">
+  <div class="wrap">
+    <h2 class="sec-title"><%= t('sec_cases') %></h2>
+    <% if (cases.length) { %>
+    <div class="case-grid">
+      <% cases.forEach(c => { %>
+      <a class="case-card" href="/case-studies/<%= c.slug %>">
+        <span class="case-tag"><%= c.industry %> · <%= c.country %></span>
+        <h3><%= c.customer_display %></h3>
+        <p><%= String(c.challenge_en||'').split('\n')[0] %></p>
+      </a>
+      <% }) %>
+    </div>
+    <% } else { %>
+    <p class="muted"><%= t('cases_empty') %></p>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<section class="sec sec-alt">
+  <div class="wrap split">
+    <div>
+      <h2 class="sec-title"><%= t('sec_factory') %></h2>
+      <p class="sec-lead"><%= hp.factory_text %></p>
+      <a class="btn btn-ghost" href="/about-us"><%= t('nav_about') %> →</a>
+    </div>
+    <div class="factory-imgs">
+      <img loading="lazy" src="<%= placeholder('FACTORY') %>" alt="Factory">
+    </div>
+  </div>
+</section>
+
+<% if (hp.show_faq && faqs.length) { %>
+<section class="sec">
+  <div class="wrap narrow">
+    <h2 class="sec-title"><%= t('faq_title') %></h2>
+    <div class="faq-list">
+      <% faqs.forEach(f => { %>
+      <details><summary><%= lang==='vi'&&f.q_vi ? f.q_vi : f.q_en %></summary><p><%= lang==='vi'&&f.a_vi ? f.a_vi : f.a_en %></p></details>
+      <% }) %>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="cta-band">
+  <div class="wrap center">
+    <h2><%= hp.final_title || t('sec_cta') %></h2>
+    <p><%= hp.final_text || t('cta_sub') %></p>
+    <div class="btn-row center">
+      <a class="btn btn-pri btn-lg" href="/get-a-quote"><%= t('btn_quote') %></a>
+      <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+    </div>
+  </div>
+</section>

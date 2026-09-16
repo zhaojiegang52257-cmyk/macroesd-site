@@ -1,0 +1,15 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1><%= t('rfq_title') %></h1>
+    <p class="sec-lead"><%= t('rfq_sub') %></p>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap narrow">
+    <%- include('partials/rfq-form') %>
+    <div class="quote-side">
+      <p>— <%= t('need_custom') %> —</p>
+      <a class="btn btn-wa" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+    </div>
+  </div>
+</section>

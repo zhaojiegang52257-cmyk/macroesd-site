@@ -1,0 +1,33 @@
+<% const lines = v => String(v||'').split('\n').filter(Boolean); %>
+<section class="page-head">
+  <div class="wrap">
+    <h1><%= t('nav_about') %></h1>
+    <p class="sec-lead"><%= L('ESD packaging & handling solutions, produced through a trusted network of specialized partner factories.', 'Giải pháp bao bì & xử lý ESD, sản xuất qua mạng lưới nhà máy đối tác chuyên biệt.') %></p>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap prose narrow">
+    <h2>Company</h2>
+    <% const intro = lines(about.company_intro); %>
+    <% if (intro.length && !String(intro[0]).startsWith('TBC')) { intro.forEach(x=>{%><p><%= x %></p><%}) } else { %><p class="tba"><%= t('about_tba') %></p><% } %>
+    <h2>Factory &amp; Manufacturing</h2>
+    <% const fac = lines(about.factory_text); %>
+    <% if (fac.length && !String(fac[0]).startsWith('TBC')) { fac.forEach(x=>{%><p><%= x %></p><%}) } else { %><p class="tba"><%= t('about_tba') %></p><% } %>
+    <% if (imgs && imgs.length) { %><div class="factory-imgs gallery"><% imgs.forEach(g=>{ %><img loading="lazy" src="/img/<%= g.id %>" alt="<%= g.alt %>"><% }) %></div><% } else { %><img loading="lazy" class="factory-imgs" src="<%= placeholder('REAL FACTORY PHOTOS - UPLOAD IN ADMIN > IMAGES (about/factory)') %>" alt="Factory"><% } %>
+    <h2>Quality Control</h2>
+    <% lines(about.quality_text).forEach(x=>{%><p><%= x %></p><%}) %>
+    <h2>Export Capability</h2>
+    <% lines(about.export_text).forEach(x=>{%><p><%= x %></p><%}) %>
+    <h2>Certificates</h2>
+    <ul class="tick-list"><% (about.certificates||[]).forEach(x=>{ %><li><%= x %></li><% }) %></ul>
+  </div>
+</section>
+<section class="cta-band">
+  <div class="wrap center">
+    <h2><%= t('sec_cta') %></h2>
+    <div class="btn-row center">
+      <a class="btn btn-pri btn-lg" href="/get-a-quote"><%= t('btn_quote') %></a>
+      <a class="btn btn-wa btn-lg" data-wa href="<%= waLink() %>"><%= t('btn_whatsapp') %></a>
+    </div>
+  </div>
+</section>

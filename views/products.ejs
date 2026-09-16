@@ -1,0 +1,22 @@
+<section class="page-head">
+  <div class="wrap">
+    <h1><%= t('sec_products') %></h1>
+    <p class="sec-lead"><%= t('products_lead') %></p>
+  </div>
+</section>
+<section class="sec">
+  <div class="wrap">
+    <div class="prod-grid">
+      <% products.forEach(p => { %>
+      <a class="pcard<%= p.is_core?' pcard-core':'' %>" data-vc="<%= p.slug %>" href="/products/<%= p.slug %>">
+        <div class="pcard-img"><img loading="lazy" src="<%= placeholder(p.name_en) %>" alt="<%= p.name_en %>"></div>
+        <div class="pcard-body">
+          <h3><%= L(p.name_en, p.name_vi) %></h3>
+          <p><%= L(p.short_en, p.short_vi) %></p>
+          <span class="pcard-link"><%= t('view_product') %> →</span>
+        </div>
+      </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
